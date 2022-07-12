@@ -42,7 +42,13 @@ class Pessoa {
     }
 
     public function insert(){
-        return (bool) insert($this->get_table_name(), converte($this->get_model(), ['id_pessoa' => (int) $this->persor_id, 'nome' => (string) $this->name, 'cpf' => (string) $this->cpf, 'genero' => (string) $this->genre]));
+        $this->persor_id = (int) next_id($this->get_table_name(), 'id_pessoa');
+        $return_insert =  (bool) insert($this->get_table_name(), converte($this->get_model(), ['id_pessoa' => (int) $this->persor_id, 'nome' => (string) $this->name, 'cpf' => (string) $this->cpf, 'genero' => (string) $this->genre]));
+        
+        if($return_insert == true)
+            return (int) $this->persor_id;
+        else
+            return (int) 0;
     }
 
     public function update(){

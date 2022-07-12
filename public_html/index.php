@@ -36,6 +36,9 @@ try{
                 }else if($service == 'App\Services\ProdutoService'){
                     $produto = new $service;
                     echo $produto->controlador($dados);
+                }else if($service == 'App\Services\PessoaService'){
+                    $person = new $service;
+                    echo $person->controlador($dados);
                 }
             }
             else
