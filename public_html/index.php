@@ -10,7 +10,6 @@ header("Access-Control-Allow-Headers: X-Requested-With");
 header('Content-Type: application/json');
 
 require_once '../vendor/autoload.php';
-    // api/users/1
 try{
     $utilidade = new Utilidade();
     if(array_key_exists('url', $_GET)){
@@ -26,9 +25,10 @@ try{
                 http_response_code(200);
                 $response = (array) [];
                 $dados = $url;
-                if($service == 'App\Services\MenuService'){
+                $utilidade->error_message(6, '');
+                /*if($service == 'App\Services\MenuService'){
                     $menu = new $service;
-                  echo $menu->controlador($dados);
+                    echo $menu->controlador($dados);
                 }
                 else if($service == 'App\Services\SubmenuService'){
                     $categoria = new $service;
@@ -39,16 +39,16 @@ try{
                 }else if($service == 'App\Services\PessoaService'){
                     $person = new $service;
                     echo $person->controlador($dados);
-                }
+                }*/
             }
             else
-            $utilidade->erro_de_sistema('Infelizmente não conseguimos completar a sua solicitação');
+            $utilidade->error_message(6, '');
 
         }else
-        $utilidade->erro_de_sistema('Não foi encontrado o prâmetro correto para realizar a pesquisa!');
+        $utilidade->error_message(6, '');
 
     }else{
-        $utilidade->erro_de_sistema('Não foi encontrado parâmetros suficientes para continuar com a operação!');
+        $utilidade->error_message(6, '');
     }
     exit;
  }catch(\Exception $e) {

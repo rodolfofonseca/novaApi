@@ -8,6 +8,7 @@ interface ModelsInterface{
     public function cadastrar();
     public function alterar();
     public function pesquisar();
-    public function pesquisar_todas($ordenacao); 
+    public function pesquisar_todas($ordenacao);
+    public function execute_user_action($action, $order = '');
 }
 ?>

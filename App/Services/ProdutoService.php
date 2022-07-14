@@ -3,7 +3,6 @@ namespace App\Services;
 use App\Models\Produto;
 class ProdutoService{
     public function controlador($dados){
-        file_put_contents('aquiProduto.txt', print_r($dados, true));
         $utilidade = new Utilidade();
         $produto = new produto();
         if(array_key_exists(0, $dados)){

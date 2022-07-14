@@ -45,27 +45,27 @@ class Categoria implements ModelsInterface{
     }
 
     public function proximo_codigo(){
-        return (int) model_next($this->get_nome_tabela(), 'id_categoria');
+        return (int) next_id($this->get_nome_tabela(), 'id_categoria');
     }
 
     public function cadastrar(){
-        return (bool) model_insert($this->get_nome_tabela(), model_parse($this->get_modelo(), ['id_categoria' => (int) $this->get_id_categoria(), 'id_menu' => (int) $this->get_id_menu(), 'descricao' => (string) $this->get_descricao(), 'aparece_menu' => (string) $this->get_apareceu_menu()]));
+        return (bool) insert($this->get_nome_tabela(), converte($this->get_modelo(), ['id_categoria' => (int) $this->get_id_categoria(), 'id_menu' => (int) $this->get_id_menu(), 'descricao' => (string) $this->get_descricao(), 'aparece_menu' => (string) $this->get_apareceu_menu()]));
     }
 
     public function alterar(){
-        return (bool) model_update($this->get_nome_tabela(), ['id_categoria', '===', (int) $this->id_categoria], model_parse($this->get_modelo(), ['id_categoria' => (int) $this->get_id_categoria(), 'id_menu' => (int) $this->get_id_menu(), 'descricao' => (string) $this->get_descricao(), 'aparece_menu' => (string) $this->get_apareceu_menu()]));
+        return (bool) update($this->get_nome_tabela(), ['id_categoria', '===', (int) $this->id_categoria], converte($this->get_modelo(), ['id_categoria' => (int) $this->get_id_categoria(), 'id_menu' => (int) $this->get_id_menu(), 'descricao' => (string) $this->get_descricao(), 'aparece_menu' => (string) $this->get_apareceu_menu()]));
     }
 
     public function pesquisar_todas($ordenacao){
-        $retorno_categorias = (array) model_all($this->get_nome_tabela(), [], ['id_categoria' => true]);
+        $retorno_categorias = (array) find_all($this->get_nome_tabela(), [], ['id_categoria' => true]);
         $menu = new Menu();
         $retorno_menu = (array) [];
         $retorno = (array) [];
 
         if($ordenacao == 'true')
-            $retorno_menu = (array) model_all($menu->get_nome_tabela(), [], ['id_categoria' => true]);
+            $retorno_menu = (array) find_all($menu->get_nome_tabela(), [], ['id_categoria' => true]);
         else
-            $retorno_menu = (array) model_all($menu->get_nome_tabela(), [], ['id_categoria' => false]);
+            $retorno_menu = (array) find_all($menu->get_nome_tabela(), [], ['id_categoria' => false]);
 
         if(empty($retorno_categorias) == false){
             foreach($retorno_categorias as $categoria){
@@ -84,7 +84,11 @@ class Categoria implements ModelsInterface{
     }
 
     public  function pesquisar(){
-        return (array) model_one($this->get_nome_tabela(), ['id_categoria', '===', (int) $this->get_id_categoria()]);
-    } 
+        return (array) find_one($this->get_nome_tabela(), ['id_categoria', '===', (int) $this->get_id_categoria()]);
+    }
+    
+    public function execute_user_action($action, $order = ''){
+
+    }
 }
 ?>
