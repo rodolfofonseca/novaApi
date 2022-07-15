@@ -3,14 +3,14 @@ namespace App\Models;
 
 require_once 'Classes/bancoDeDados.php';
 
-class Menu{
+class Menu implements ModelsInterface{
     private $id_menu;
     private $descricao;
     private $status;
-    public function get_nome_tabela(){
+    public function get_table_name(){
         return (string) 'menu';
     }
-    public function get_modelo(){
+    public function get_model(){
         return (array) ['id_menu' => (int) 0, 'descricao' => (string) '', 'status' => (string) ''];
     }
     public function get_id_menu(){
@@ -38,29 +38,35 @@ class Menu{
             $this->status = (string) 'N';
     }
 
-    public function proximo_codigo(){
-        return (int) next_id($this->get_nome_tabela(), 'id_menu');
-    }
-
-    public function cadastrar(){
-        $this->id_menu = (int) $this->proximo_codigo();
-        return (bool) insert($this->get_nome_tabela(), converte($this->get_modelo(), ['descricao' => (string) $this->get_descricao(), 'status' => (string) $this->get_status(), 'id_menu' => (int) $this->id_menu]));
-    }
-
-    public function alterar(){
-        return (bool) update($this->get_nome_tabela(), ['id_menu', '===', (int) $this->get_id_menu()], converte($this->get_modelo(), ['id_menu' => (int) $this->get_id_menu(), 'descricao' => (string) $this->get_descricao(), 'status' => (string) $this->get_status()]));
-    }
-
-    public function pesquisar_menu_todos($ordenacao){
-        if($ordenacao == 'true')
-            return (array) find_all($this->get_nome_tabela(), [], ['id_menu' => (bool) true]);
-        else if($ordenacao == 'false')
-            return (array) find_all($this->get_nome_tabela(), [], ['id_menu' => (bool) false]);
+    public function register()
+    {
         
     }
 
-    public function pesquisar_menu(){
-        return (array) find_one($this->get_nome_tabela(), ['id_menu', '===', (int) $this->get_id_menu()]);
+    public function change()
+    {
+        
+    }
+
+    public function search_a()
+    {
+        return (array) find_one($this->get_table_name(), ['id_menu', '===', (int) $this->id_menu]);
+    }
+
+    public function search_all($order)
+    {
+        return (array) find_all($this->get_table_name(), [], ['id_menu' => (bool) check_ordering($order)]);
+    }
+
+    public function execute_user_action($data)
+    {
+        $return_array = (array) [];
+        if($data[0] == 'find'){
+            $return_array = (array) $this->search_a();
+        }else if($data[0] == 'find_all'){
+            $return_array = (array) $this->search_all($data[1]);
+        }
+        return (array) ['status' => (bool) true, 'dados' => (array) $return_array];
     }
 }
 ?>

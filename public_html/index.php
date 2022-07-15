@@ -25,12 +25,13 @@ try{
                 http_response_code(200);
                 $response = (array) [];
                 $dados = $url;
-                $utilidade->error_message(6, '');
-                /*if($service == 'App\Services\MenuService'){
+                if($service == 'App\Services\MenuService'){
                     $menu = new $service;
                     echo $menu->controlador($dados);
+                }else{
+                    $utilidade->error_message(2);
                 }
-                else if($service == 'App\Services\SubmenuService'){
+                /*else if($service == 'App\Services\SubmenuService'){
                     $categoria = new $service;
                     echo $categoria->controlador($dados);
                 }else if($service == 'App\Services\ProdutoService'){
@@ -42,13 +43,13 @@ try{
                 }*/
             }
             else
-            $utilidade->error_message(6, '');
+            $utilidade->error_message(2, '');
 
         }else
-        $utilidade->error_message(6, '');
+        $utilidade->error_message(1, '');
 
     }else{
-        $utilidade->error_message(6, '');
+        $utilidade->error_message(0, '');
     }
     exit;
  }catch(\Exception $e) {
