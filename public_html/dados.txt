@@ -1,6 +1,0 @@
-Array
-(
-    [0] => insert
-    [1] => Teste Api
-    [2] => ATIVO
-)

@@ -28,16 +28,17 @@ try{
                 if($service == 'App\Services\MenuService'){
                     $menu = new $service;
                     echo $menu->controlador($dados);
-                }else{
-                    $utilidade->error_message(2);
                 }
-                /*else if($service == 'App\Services\SubmenuService'){
+                else if($service == 'App\Services\SubmenuService'){
                     $categoria = new $service;
                     echo $categoria->controlador($dados);
-                }else if($service == 'App\Services\ProdutoService'){
+                }
+                else if($service == 'App\Services\ProdutoService'){
                     $produto = new $service;
                     echo $produto->controlador($dados);
-                }else if($service == 'App\Services\PessoaService'){
+                }else{
+                    $utilidade->error_message(2);
+                }/*else if($service == 'App\Services\PessoaService'){
                     $person = new $service;
                     echo $person->controlador($dados);
                 }*/

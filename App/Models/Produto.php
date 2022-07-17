@@ -1,9 +1,11 @@
 <?php
 namespace App\Models;
 
+use MongoDB\Operation\Find;
+
 require_once 'Classes/bancoDeDados.php';
 
-class Produto{
+class Produto implements ModelsInterface{
     private $id_produto;
     private $id_menu;
     private $id_sub_menu;
@@ -30,88 +32,44 @@ class Produto{
         $this->preco_normal = (float) $preco_normal;
     }
 
-    public function get_preco_normal(){
-        return (float) $this->preco_normal;
-    }
-
     public function set_preco_com_desconto($preco_com_desconto){
         $this->preco_com_desconto = (float) $preco_com_desconto;
-    }
-
-    public function get_preco_com_desconto(){
-        return (float) $this->preco_com_desconto;
     }
 
     public function set_id_produto($id_produto){
         $this->id_produto = (int) $id_produto;
     }
 
-    public function get_id_produto(){
-        return $this->id_produto;
-    }
-
     public function set_id_menu($id_menu){
         $this->id_menu = (int) $id_menu;
-    }
-
-    public function get_id_menu(){
-        return $this->id_menu;
     }
 
     public function set_id_sub_menu($id_sub_menu){
         $this->id_sub_menu = (int) $id_sub_menu;
     }
 
-    public function get_id_sub_menu(){
-        return $this->id_sub_menu;
-    }
-
     public function set_nome_produto($nome_produto){
         $this->nome_produto = (string) $nome_produto;
-    }
-
-    public function get_nome_produto(){
-        return $this->nome_produto;
     }
 
     public function set_marca($marca){
         $this->marca = (string) $marca;
     }
 
-    public function get_marca(){
-        return $this->marca;
-    }
-
     public function set_descricao_curta($descricao_curta){
         $this->descricao_curta = (string) $descricao_curta;
-    }
-
-    public function get_descricao_curta(){
-        return $this->descricao_curta;
     }
 
     public function set_descricao_longa($descricao_longa){
         $this->descricao_longa = (string) $descricao_longa;
     }
 
-    public function get_descricao_longa(){
-        return $this->descricao_longa;
-    }
-
     public function set_quantidade_estoque($quantidade_estoque){
         $this->quantidade_estoque = (float) $quantidade_estoque;
     }
 
-    public function get_quantidade_estoque(){
-        return $this->quantidade_estoque;
-    }
-
     public function set_quantidade_minima_estoque($quantidade_minima_estoque){
         $this->quantidade_minima_estoque = (float) $quantidade_minima_estoque;
-    }
-
-    public function get_quantidade_minima_estoque(){
-        return $this->quantidade_minima_estoque;
     }
 
     public function set_quantidade_separada_estoque($quantidade_separada_venda){
@@ -126,47 +84,73 @@ class Produto{
         $this->link_produto = (string) $link_produto;
     }
 
-    public function get_link_do_produto(){
-        return $this->link_produto;
-    }
-
     public function set_status($status){
         $this->status = (string) $status;
-    }
-
-    public function get_status(){
-        return $this->status;
     }
 
     public function set_codigo_barras($codigo_barras){
         $this->codigo_barras = (string) $codigo_barras;
     }
 
-    public function get_codigo_barras(){
-        return $this->codigo_barras;
+    public function register(){}
+    public function change(){}
+
+    public function search_a()
+    {
+        $array_produto =  (array) find_one($this->get_table_name(), ['id_produto', '===', (int) $this->id_produto]);
+        $array_produto['imagens'] = (array) find_all('imagens', ['id_produto', '===', (int) $this->id_produto], ['id_imagem' => (bool) false]);
+        return (array) $array_produto;
     }
 
-    public function next_id(){
-        return (int) next_id($this->get_table_name(), 'id_produto');
+    public function search_all($order, $category = 0)
+    {
+        $return_produtos = (array) [];
+        $category_filtros = (array) [];
+
+        if($category != 0){
+            array_push($category_filtros, ['id_menu' ,'===', (int) $category]);
+        }
+
+        if(empty($category_filtros) == false){
+            if($order == 'true'){
+                $return_produtos = (array) find_all($this->get_table_name(), [$category_filtros], ['id_produto' => (bool) true]);
+            }else{
+                $return_produtos = (array) find_all($this->get_table_name(), [$category_filtros], ['id_produto' => (bool) false]);
+            }
+        }else{
+            if($order == 'true'){
+                $return_produtos = (array) find_all($this->get_table_name(), [], ['id_produto' => (bool) true]);
+            }else{
+                $return_produtos = (array) find_all($this->get_table_name(), [], ['id_produto' => (bool) false]);
+            }
+        }
+        
+        $return_ordenado = (array) [];
+        if(empty($return_produtos) == false){
+            foreach($return_produtos as $produto){
+                $array = (array) $produto;
+                if(array_key_exists('id_produto', $produto)){
+                    $array['imagens'] = (array) find_all('imagens', ['id_produto', '===', (int) $produto['id_produto']], ['id_imagem' => (bool) false]);
+                }
+                array_push($return_ordenado, $array);
+            }
+        }
+        return (array) $return_ordenado;
     }
 
-    public function insert(){
-        return (bool) insert($this->get_table_name(), converte($this->get_model(), ['id_produto' => (int) $this->get_id_produto(), 'id_menu' => (int) $this->get_id_menu(), 'id_sub_menu' => (int) $this->get_id_sub_menu(), 'nome_produto' => (string) $this->get_nome_produto(), 'marca' => (string) $this->get_marca(), 'descricao_curta' => (string) $this->get_descricao_curta(), 'descricao_longa' => (string) $this->get_descricao_longa(), 'quantidade_estoque' => (float) $this->get_quantidade_estoque(), 'quantidade_minima_estoque' => (float) $this->get_quantidade_minima_estoque(), 'quantidade_separada_venda' => (float) $this->get_quantidade_separada_estoque(), 'link_produto' => (string) $this->get_link_do_produto(), 'status' => (string) $this->get_status(), 'preco_normal' => (float) $this->get_preco_normal(), 'preco_com_desconto' => (float) $this->get_preco_com_desconto()]));
+    public function execute_user_action($data)
+    {
+        $return = (array) [];
+        if($data[0] == 'find_one'){
+            $this->id_produto = (int) intval($data[1], 10);
+            $return = (array) $this->search_a();
+        }else if($data[0] == 'find_all'){
+            $return = (array) $this->search_all($data[1], 0);
+        }else if($data[0] == 'find_all_category'){
+            $return = (array) $this->search_all($data[1], $data[2]);
+        }
+        return json_encode(['status' => (string) 'success', 'dados' => (array) $return], JSON_UNESCAPED_UNICODE);
     }
 
-    public function update(){
-        return (bool) update($this->get_table_name(), ['id_produto', '===', (int) $this->get_id_produto()], converte($this->get_model(), ['id_produto' => (int) $this->get_id_produto(), 'id_menu' => (int) $this->get_id_menu(), 'id_sub_menu' => (int) $this->get_id_sub_menu(), 'nome_produto' => (string) $this->get_nome_produto(), 'marca' => (string) $this->get_marca(), 'descricao_curta' => (string) $this->get_descricao_curta(), 'descricao_longa' => (string) $this->get_descricao_longa(), 'quantidade_estoque' => (float) $this->get_quantidade_estoque(), 'quantidade_minima_estoque' => (float) $this->get_quantidade_minima_estoque(), 'quantidade_separada_venda' => (float) $this->get_quantidade_separada_estoque(), 'link_produto' => (string) $this->get_link_do_produto(), 'status' => (string) $this->get_status(), 'preco_normal' => (float) $this->get_preco_normal(), 'preco_com_desconto' => (float) $this->get_preco_com_desconto()]));
-    }
-
-    public function find(){
-        return (array) find_all($this->get_table_name(), ['id_produto', '===', (int) $this->get_id_produto()]);
-    }
-
-    public function find_all($order){
-        if($order == 'true')
-            return (array) find_all($this->get_table_name(), [], ['id_produto' => (bool) true]);
-        else
-            return (array) find_all($this->get_table_name(), [], ['id_produto' => (bool) false]);
-    }
 }
 ?>
