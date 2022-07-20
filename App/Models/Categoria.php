@@ -45,6 +45,8 @@ class Categoria implements ModelsInterface{
     {
         return (array) find_all($this->get_table_name(), [], ['id_categoria' => (bool) check_ordering($order)]);
     }
+
+    public function assemble_array($array){}
     
     public function execute_user_action($dados){
         $return = (array) [];
@@ -54,7 +56,7 @@ class Categoria implements ModelsInterface{
         }else if($dados[0] == 'find_all'){
             $return = (array) $this->search_all($dados[1]);
         }
-        return (array) ['status' => (bool) true, 'dados' => (array) $return];
+        return (array) ['status' => (string) 'success', 'dados' => (array) $return];
     }
 }
 ?>

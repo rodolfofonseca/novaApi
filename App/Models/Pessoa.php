@@ -110,7 +110,7 @@ class Pessoa implements ModelsInterface{
         }
         return (array) $array_cripty;
     }
-
+    public function assemble_array($array){}
     public function execute_user_action($data)
     {
         $return = (array) [];
@@ -124,7 +124,7 @@ class Pessoa implements ModelsInterface{
             $return = (array) $this->search_all($data[1]);
         }
 
-        return json_encode(['status' => (bool) true, 'data' => (array) $return], JSON_UNESCAPED_UNICODE);
+        return json_encode(['status' => (string) 'success', 'data' => (array) $return], JSON_UNESCAPED_UNICODE);
     }
 }
 ?>

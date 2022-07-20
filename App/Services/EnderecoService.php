@@ -6,74 +6,168 @@ use App\Models\Endereco;
 class EnderecoService implements ServiceInterface{
     
     public function controlador($dados){
-        $utilidade = new Utilidade();
-
+        $util = new Utilidade();
+        $endereco = new Endereco();
+        $validator = (bool) false;
+        $texto = (string) '';
         if(array_key_exists(0, $dados)){
-            $endereco = new Endereco();
-
             if($dados[0] == 'insert' || $dados[0] == 'update'){
-                if(array_key_exists(1, $dados))
-                    $endereco->set_description((string) $dados[1]);
-                else
-                    $utilidade->error_message(4, 'DESCRIÇÃO');
+                if(array_key_exists(1, $dados)){
+                    $texto = (string) $util->descrypt($dados[1]);
+
+                    if($texto != ''){
+                        $endereco->set_person_id((int) intval($texto, 10));
+                        $validator = (bool) true;
+                    }else{
+                        $validator = (bool) $this->error_log($util);
+                    }
+                }else{
+                    $validator = (bool) $this->error_log_message($util, 'ID PESSOA');                    
+                }
+
+                if(array_key_exists(2, $dados)){
+                    $texto = (string) $util->descrypt($dados[2]);
+
+                    if($texto != ''){
+                        $endereco->set_description($texto);
+                        $validator = (bool) true;
+                    }else{
+                        $validator = (bool) $this->error_log($util);
+                    }
+                }else{
+                    $validator = (bool) $this->error_log_message($util, 'DESCRIÇÃO');
+                }
+
+                if(array_key_exists(3, $dados)){
+                    $texto = (string) $util->descrypt($dados[3]);
+
+                    if($texto != ''){
+                        $endereco->set_state($texto);
+                        $validator = (bool) true;
+                    }else{
+                        $validator = (bool) $this->error_log($util);
+                    }
+                }else{
+                    $validator = (bool) $this->error_log_message($util, 'ESTADO');
+                }
+
+                if(array_key_exists(4, $dados)){
+                    $texto = (string) $util->descrypt($dados[4]);
+
+                    if($texto != ''){
+                        $endereco->set_city($texto);
+                        $validator = (bool) true;
+                    }else{
+                        $validator = (bool) $this->error_log($util);
+                    }
+                }else{
+                    $validator = (bool) $this->error_log_message($util, 'CIDADE');
+                }
+
+                if(array_key_exists(5, $dados)){
+                    $texto = (string) $util->descrypt($dados[5]);
+
+                    if($texto != ''){
+                        $endereco->set_district($texto);
+                        $validator = (bool) true;
+                    }else{
+                        $validator = (bool) $this->error_log($util);
+                    }
+                }else{
+                    $validator = (bool) $this->error_log_message($util, 'BAIRRO');
+                }
                 
-                if(array_key_exists(2, $dados))
-                    $endereco->set_state((string) $dados[2]);
-                else
-                    $utilidade->error_message(4, 'ESTADO');
+                if(array_key_exists(6, $dados)){
+                    $texto = (string) $util->descrypt($dados[6]);
+
+                    if($texto != ''){
+                        $endereco->set_complement($texto);
+                        $validator = (bool) true;
+                    }else{
+                        $validator = (bool) $this->error_log($util);
+                    }
+                }else{
+                    $validator = (bool) $this->error_log_message($util, 'COMPLEMENTO');
+                }
+
+                if(array_key_exists(7, $dados)){
+                    $texto = (string) $util->descrypt($dados[7]);
+
+                    if($texto != ''){
+                        $endereco->set_comments($texto);
+                        $validator = (bool) true;
+                    }else{
+                        $validator = (bool) $this->error_log($util);
+                    }
+                }else{
+                    $validator = (bool) $this->error_log_message($util, 'DESCRIÇÃO COMPLEMENTO');
+                }
                 
-                if(array_key_exists(3, $dados))
-                    $endereco->set_city($dados[3]);
-                else
-                    $utilidade->error_message(4, 'CIDADE');
-                
-                if(array_key_exists(4, $dados))
-                    $endereco->set_district((string) $dados[4]);
-                else
-                    $utilidade->error_message(4, 'BAIRRO');
-                
-                if(array_key_exists(5, $dados))
-                    $endereco->set_complement((string) $dados[5]);
-                else
-                    $utilidade->error_message(4, 'RUA / NÚMERO');
-                
-                if(array_key_exists(6, $dados))
-                    $endereco->set_comments((string) $dados[6]);
-                else
-                    $utilidade->error_message(4, 'COMPLEMENTO');
-                
-                if(array_key_exists(7, $dados))
-                    $endereco->set_status((string) $dados[7]);
-                else
-                    $utilidade->error_message(4, 'STATUS');
+                if(array_key_exists(8, $dados)){
+                    $texto = (string) $util->descrypt($dados[8]);
+
+                    if($texto != ''){
+                        $endereco->set_status($texto);
+                        $validator = (bool) true;
+                    }else{
+                        $validator = (bool) $this->error_log($util);
+                    }
+                }else{
+                    $validator = (bool) $this->error_log_message($util, 'STATUS');
+                }
 
                 if($dados[0] == 'update'){
-                    if(array_key_exists(8, $dados))
-                        $endereco->set_ender_id((int) intval($dados[8], 10));
-                    else
-                        $utilidade->error_message(4, 'ID');
+                    if(array_key_exists(9, $dados)){
+                        $texto = (string) $util->descrypt($dados[9]);
+                        
+                        if($texto != ''){
+                            $endereco->set_ender_id((int) intval($texto, 10));
+                            $validator = (bool) true;
+                        }else{
+                            $validator = (bool) $this->error_log($util);
+                        }
+                    }else{
+                        $validator = (bool) $this->error_log_message($util, 'ID ENDEREÇO');
+                    }
+                }
+            }else if($dados[0] == 'find_one'){
+                if(array_key_exists(1, $dados)){
+                    $texto = (string) $util->descrypt($dados[1]);
 
-                    return $endereco->execute_user_action($dados[0]);
-                }else if($dados[0] == 'insert')
-                    return $endereco->execute_user_action($dados[0]);
+                    if($texto != ''){
+                        $endereco->set_ender_id((int) intval($texto, 10));
+                        $validator = (bool) true;
+                    }else{
+                        $validator = (bool) $this->error_log($util);
+                    }
+                }else{
+                    $validator = (bool) $this->error_log_message($util, 'ID');
+                }
 
-            }else if($dados[0] == 'find'){
-                if(array_key_exists(1, $dados))
-                    $endereco->set_ender_id((int) intval($dados[1], 10));
-                else
-                    $utilidade->error_message(4, 'ID');
-                
-                return $endereco->execute_user_action($dados[0]);
             }else if($dados[0] == 'find_all'){
-                if(array_key_exists(1, $dados))
-                    return $endereco->execute_user_action($dados[0], $dados[1]);
-                else
-                    $utilidade->error_message(5);
+                if(array_key_exists(1, $dados)){
+                    $validator = (bool) true;
+                }else{
+                    $validator = (bool) $this->error_log_message($util, 'ORDENAÇÃO');
+                }
             }
 
+            if($validator == true){
+                return $endereco->execute_user_action($dados);
+            }
         }else{
-            $utilidade->error_message(3, '');
+            $util->error_message(3);
         }
+    }
+
+    public function error_log($util){
+        $util->error_message(7);
+        return (bool) false;
+    }
+
+    public function error_log_message($util, $message){
+        $util->error_message(4, $message);
+        return (bool) false;
     }
 }
 ?>)

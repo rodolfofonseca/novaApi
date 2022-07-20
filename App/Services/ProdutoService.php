@@ -45,6 +45,6 @@ class ProdutoService{
         }else{
             $utilidade->error_message(3);
         }
-    } 
+    }
 }
 ?>

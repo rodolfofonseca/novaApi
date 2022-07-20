@@ -48,6 +48,7 @@ class Contatos{
     public function find(){
 
     }
+    public function assemble_array($array){}
     public function find_all($order){
         if($this->id_pessoa != 0)
             return (array) find_one($this->get_table_name(), ['id_pessoa', '===', (int) $this->id_pessoa]);

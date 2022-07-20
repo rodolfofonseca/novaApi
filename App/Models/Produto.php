@@ -129,7 +129,7 @@ class Produto implements ModelsInterface{
         }
         return (array) $return_ordenado;
     }
-
+    public function assemble_array($array){}
     public function execute_user_action($data)
     {
         $return = (array) [];

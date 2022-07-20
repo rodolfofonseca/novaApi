@@ -57,7 +57,7 @@ class Menu implements ModelsInterface{
     {
         return (array) find_all($this->get_table_name(), [], ['id_menu' => (bool) check_ordering($order)]);
     }
-
+    public function assemble_array($array){}
     public function execute_user_action($data)
     {
         $return_array = (array) [];
@@ -66,7 +66,7 @@ class Menu implements ModelsInterface{
         }else if($data[0] == 'find_all'){
             $return_array = (array) $this->search_all($data[1]);
         }
-        return (array) ['status' => (bool) true, 'dados' => (array) $return_array];
+        return (array) ['status' => (string) 'success', 'dados' => (array) $return_array];
     }
 }
 ?>

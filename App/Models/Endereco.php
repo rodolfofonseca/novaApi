@@ -1,7 +1,8 @@
 <?php
 namespace App\Models;
+use App\Services\Utilidade;
 require_once 'Classes/bancoDeDados.php';
-class Endereco {
+class Endereco implements ModelsInterface{
     private $id_endereco;
     private $id_pessoa;
     private $descricao;
@@ -48,55 +49,80 @@ class Endereco {
         $this->status = (string) $status;
     }
 
-    private function get_table_name(){
+    public function get_table_name(){
         return (string) 'endereco';
     }
-    private function get_model(){
+    
+    public function get_model(){
         return (array) ['id_endereco' => (int) 0, 'id_pessoa' => (int) 0,'descricao' => (string) '', 'estado' => (string) '', 'cidade' => (string) '', 'bairro' => (string) '', 'complemento' => (string) '', 'observacoes_endereco' => (string) '', 'status' => (string) ''];
     }
 
-    private function next_id_ende(){
-        return next_id($this->get_table_name(), 'id_endereco');
+    public function register(){
+        $util = new Utilidade();
+        $return = (string) insert($this->get_table_name(), ['id_pessoa' => (int) $this->id_pessoa, 'descricao' => (string) $this->descricao, 'estado' => (string) $this->estado, 'cidade' => (string) $this->cidade, 'bairro' => (string) $this->bairro, 'complemento' => (string) $this->complemento, 'observacoes_endereco' => (string) $this->observacoes_endereco, 'status' => (string) $this->status], $this->get_model(), 'id_endereco');
+
+        return (array) ['id_pessoa' => $util->encripty($return['id_endereco'])];
     }
 
-    public function insert_ende(){
-        $this->id_endereco = (int) $this->next_id_ende();
-        $return_insert = (bool) insert($this->get_table_name(), [converte($this->get_model(), ['id_endereco' => (int) $this->id_endereco, 'descricao' => (string) $this->descricao, 'estado' => (string) $this->estado, 'cidade' => (string) $this->cidade, 'bairro' => (string) $this->bairro, 'complemento' => (string) $this->complemento, 'status' => (string) $this->status])]);
-        
-        if($return_insert == true)
-            return $this->id_endereco;
-        else
-            return 0;
+    public function change(){
+         $return = (bool) update($this->get_table_name(), ['id_endereco', '===', (int) $this->id_endereco], ['id_pessoa' => (int) $this->id_pessoa, 'descricao' => (string) $this->descricao, 'estado' => (string) $this->estado, 'cidade' => (string) $this->cidade, 'bairro' => (string) $this->bairro, 'complemento' => (string) $this->complemento, 'observacoes_endereco' => (string) $this->observacoes_endereco, 'status' => (string) $this->status]);
+
+         return (array) ['status_update' => (bool) $return];
     }
 
-    public function update_ende(){
-        return (bool) update($this->get_table_name(), ['id_endereco', '===', (int) $this->id_endereco], [converte($this->get_table_name(), ['id_endereco' => (int) $this->id_endereco, 'descricao' => (string) $this->descricao, 'estado' => (string) $this->estado, 'cidade' => (string) $this->cidade, 'bairro' => (string) $this->bairro, 'complemento' => (string) $this->complemento, 'status' => (string) $this->status])]);
+    public function search_a(){
+        $array_return = (array) find_one($this->get_table_name(), ['id_endereco' => (int) $this->id_endereco]);
+
+        if(empty($array_return) == false){
+            return (array) $this->assemble_array($array_return);
+        }else{
+            return (array) [];
+        }
     }
 
-    public function find(){
-        return (array) find_one($this->get_table_name(), ['id_endereco', '===', (int) $this->id_endereco]);
+    public function search_all($order){
+        $array_return = (array) find_all($this->get_table_name(), [], ['id_endereco' => (bool) check_ordering($order)]);
+        $return = (array) [];
+
+        if(empty($array_return) == false){
+            foreach($array_return as $array){
+                array_push($return, $this->assemble_array($array));
+            }
+        }
+
+        return (array) $return;
     }
 
-    public function find_all($order){
-        if($order == 'true')
-            return (array) find_all($this->get_table_name(), [], ['id_endereco' => (bool) true]);
-         else
-            return (array) find_all($this->get_table_name(), [], ['id_endereco' => (bool) false]);
+    public function assemble_array($array){
+        $util = new Utilidade();
+        $id_endereco = (string) $util->encripty_array($array, 'id_endereco');
+        $id_pessoa = (string) $util->encripty_array($array, 'id_pessoa');
+        $descricao = (string) $util->encripty_array($array, 'descricao');
+        $estado = (string) $util->encripty_array($array, 'estado');
+        $cidade = (string) $util->encripty_array($array, 'cidade');
+        $bairro = (string) $util->encripty_array($array, 'bairro');
+        $complemento = (string) $util->encripty_array($array, 'complemento');
+        $observacoes_endereco = (string) $util->encripty_array($array, 'observacoes_endereco');
+        $status = (string) $util->encripty_array($array, 'statys');
+
+        return (array) ['id_endereco' => (string) $id_endereco, 'id_pessoa' => (string) $id_pessoa, 'descricao' => (string) $descricao, 'estado' => (string) $estado, 'cidade' => (string) $cidade, 'bairro' => (string) $bairro, 'complemento' => (string) $complemento, 'observacoes_endereco' => (String) $observacoes_endereco, 'status' => (string) $status];
     }
 
-    public function search_by_user($person_id){
-        return (array) find_one($this->get_table_name(), ['id_pessoa', '===', (int) $person_id]);
-    }
+    public function execute_user_action($data)
+    {
+        $return = (array) [];
 
-    public function execute_user_action($action, $order = ''){
-        if($action == 'insert')
-            return json_encode(['status' => (string) 'success', 'data' => (int) $this->insert_ende()], JSON_UNESCAPED_UNICODE);
-        else if($action == 'update')
-            return json_encode(['status' => (string) 'success', 'data' => (bool) $this->update_ende()], JSON_UNESCAPED_UNICODE);
-        else if($action == 'find')
-            return json_encode(['status' => (string) 'success', 'data' => (array) $this->find()], JSON_UNESCAPED_UNICODE);
-        else if($action == 'find_all')
-            return json_encode(['status' => (string) 'sucess', 'data' => (array) $this->find_all($order)], JSON_UNESCAPED_UNICODE);
+        if($data[0] == 'insert'){
+            $return = (string) $this->register(); 
+        }else if($data[0] == 'update'){
+            $return = (bool) $this->change();
+        }else if($data[0] == 'find_one'){
+            $return = (array) $this->search_a();
+        }else if($data[0] == 'find_all'){
+            $return = (array) $this->search_all($data[1]);
+        }
+
+        return json_encode(['status' => (string) 'success', 'data' => (array) $return], JSON_UNESCAPED_UNICODE);
     }
 }
 ?>

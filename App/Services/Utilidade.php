@@ -87,5 +87,40 @@ class Utilidade{
 
         return (int) $resultado;
     }
+
+    /**
+     * Função responsável por verificar a chave de um array e criptografar essa chave caso ela exista.
+     * @param (array) $array que deverá ser verificado
+     * @param (string/int) $key chave que deve ser analizada dentro do array
+     * @return (string) retorno da criptografia 
+     */
+    public function encripty_array($array, $key){
+        $text = (string) '';
+
+        if(array_key_exists($key, $array)){
+            $text = (string) $this->encripty((string) $array[$key]);
+        }
+
+        return (string) $text;
+    }
+
+    /**
+     * Função responsável por exibir a mensagem de erro e retornar o validator.
+     * @return (bool) false
+     */
+    public function error_log(){
+        $this->error_message(7);
+        return (bool) false;
+    }
+
+    /**
+     * Função responsável por exibir a mensagem de erro e retornar o validador
+     * @param (string) $mensagem a ser exibida
+     * @return (bool) false
+     */
+    public function error_log_message($message){
+        $this->error_message(4, $message);
+        return (bool) false;
+    }
 }
 ?>

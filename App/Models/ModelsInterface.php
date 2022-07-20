@@ -8,6 +8,7 @@ interface ModelsInterface{
     public function change();
     public function search_a();
     public function search_all($order);
+    public function assemble_array($array);
     public function execute_user_action($data);
 }
 ?>

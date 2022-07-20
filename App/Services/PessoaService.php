@@ -69,8 +69,15 @@ class PessoaService implements ServiceInterface{
                 }
             }else if($dados[0] == 'find_one'){
                 if(array_key_exists(1, $dados)){
-                    $person->set_person_id((int) intval($dados[1], 10));
-                    $validator = (bool) true;
+                    $texto = (string) $utilidade->descrypt($dados[1]);
+
+                    if($texto != ''){
+                        $person->set_person_id((int) intval($texto, 10));
+                        $validator = (bool) true;
+                    }else{
+                        $utilidade->error_message(7);
+                        $validator = (bool) false;
+                    }
                 }else{
                     $utilidade->error_message(4, 'ID');
                     $validator = (bool) false;
