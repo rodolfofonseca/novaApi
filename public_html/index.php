@@ -36,12 +36,12 @@ try{
                 else if($service == 'App\Services\ProdutoService'){
                     $produto = new $service;
                     echo $produto->controlador($dados);
-                }else{
-                    $utilidade->error_message(2);
-                }/*else if($service == 'App\Services\PessoaService'){
+                }else if($service == 'App\Services\PessoaService'){
                     $person = new $service;
                     echo $person->controlador($dados);
-                }*/
+                }else{
+                    $utilidade->error_message(2);
+                }
             }
             else
             $utilidade->error_message(2, '');

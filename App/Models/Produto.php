@@ -112,17 +112,9 @@ class Produto implements ModelsInterface{
         }
 
         if(empty($category_filtros) == false){
-            if($order == 'true'){
-                $return_produtos = (array) find_all($this->get_table_name(), [$category_filtros], ['id_produto' => (bool) true]);
-            }else{
-                $return_produtos = (array) find_all($this->get_table_name(), [$category_filtros], ['id_produto' => (bool) false]);
-            }
+            $return_produtos = (array) find_all($this->get_table_name(), [$category_filtros], ['id_produto' => (bool) check_ordering($order)]);
         }else{
-            if($order == 'true'){
-                $return_produtos = (array) find_all($this->get_table_name(), [], ['id_produto' => (bool) true]);
-            }else{
-                $return_produtos = (array) find_all($this->get_table_name(), [], ['id_produto' => (bool) false]);
-            }
+            $return_produtos = (array) find_all($this->get_table_name(), [], ['id_produto' => (bool) check_ordering($order)]);
         }
         
         $return_ordenado = (array) [];
